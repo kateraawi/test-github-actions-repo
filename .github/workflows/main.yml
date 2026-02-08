@@ -1,5 +1,5 @@
-name: Docker build and push
-run-name: ${{ github.actor }} is building image
+name: Deploy bot
+run-name: ${{ github.actor }} is deploying bot
 on: [push]
 jobs:
   Docker-build-and-push:
@@ -14,4 +14,10 @@ jobs:
           docker login -u kateraawi -p ${{ secrets.DOCKER_HUB_TOKEN }}
           docker push kateraawi/test-ci-cd:latest
           docker push kateraawi/test-ci-cd:${{ github.sha }}
-
+  Deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Play ansible-playbook
+        run: |
+          source /home/user/ansible-venv/bin/activate
+          ansible-playbook -i inventory.ini -e "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" playbook.yml
