@@ -1,18 +1,17 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Docker build and push
+run-name: ${{ github.actor }} is building image
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Docker-build-and-push:
     runs-on: self-hosted
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v5
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - name: Docker build
+        run: docker build . -t kateraawi/test-ci-cd:latest -t kateraawi/test-ci-cd:${{ github.sha }}
+      - name: Docker push
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          docker login -u kateraawi -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker push kateraawi/test-ci-cd:latest
+          docker push kateraawi/test-ci-cd:${{ github.sha }}
+
