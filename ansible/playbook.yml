@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+  - name: Install requests
+    pip:
+      name: requests
+      virtualenv: "{{ venv_dir }}"
+  - name: Create bot container
+    community.docker.docker_container:
+      name: bot
+      image: kateraawi/test-ci-cd:latest
+      env:
+        BOT_TOKEN: "{{ BOT_TOKEN }}"
+
