@@ -17,7 +17,9 @@ jobs:
   Deploy:
     runs-on: self-hosted
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
       - name: Play ansible-playbook
         run: |
           source /home/user/ansible-venv/bin/activate
-          ansible-playbook -i inventory.ini -e "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" playbook.yml
+          ansible-playbook -i ansible/inventory.ini -e "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" ansible/playbook.yml
